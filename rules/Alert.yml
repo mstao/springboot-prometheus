@@ -1,0 +1,19 @@
+groups:
+- name: WmsAlert
+  rules:
+  - alert: JvmHeapMemoryUsed
+    expr: jvm_memory_used_bytes{area="heap"}  /  jvm_memory_max_bytes{area="heap"} >= 0.8
+    for: 10s
+    labels:
+      severity: warning
+    annotations:
+      summary: "应用: {{ $labels.application }} 堆内存使用超过80%"
+      description: "应用: {{ $labels.application }} ，实例： {{ $labels.instance }} 堆内存使用超过80%， 当前值： {{ $value }}"
+  - alert: InstanceDown
+    expr: up == 0
+    for: 30s
+    labels:
+      severity: yellow
+    annotations:
+      summary: "应用: {{ $labels.application }} 掉线"
+      description: "应用: {{ $labels.application }} ，实例： {{ $labels.instance }} 掉线超过30s"
